@@ -7,17 +7,15 @@
 trigger:
 - main
 
-extends:
-  template: start.yml
-  parameters:
-    buildSteps:  
-      - bash: echo Test #Passes
-        displayName: succeed
-      - bash: echo "Test"
-        displayName: succeed
-      # Step is rejected by raising a YAML syntax error: Unexpected value 'CmdLine@2'
-      - task: CmdLine@2
-        inputs:
-          script: echo "Script Test"
-      # Step is rejected by raising a YAML syntax error: Unexpected value 'CmdLine@2'
-      - script: echo "Script Test"
+pool: 
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: Install
+  jobs: 
+  - job: npminstall
+    steps:
+    - task: Npm@1
+      inputs:
+        command: 'install'
+- template: start.yml
