@@ -4,29 +4,11 @@
 # https://aka.ms/yaml
 
 # File: start.yml
-parameters:
-- name: buildSteps # the name of the parameter is buildSteps
-  type: stepList # data type is StepList
-  default: [] # default value of buildSteps
 stages:
-- stage: secure_buildstage
-  pool:
-    vmImage: windows-latest
+- stage: Angular
   jobs:
-  - job: secure_buildjob
+  - job: angularinstall
     steps:
-    - script: echo This happens before code 
-      displayName: 'Base: Pre-build'
-    - script: echo Building
-      displayName: 'Base: Build'
+      - script: npm install angular
+      
 
-    - ${{ each step in parameters.buildSteps }}:
-      - ${{ each pair in step }}:
-          ${{ if ne(pair.value, 'CmdLine@2') }}:
-            ${{ pair.key }}: ${{ pair.value }}       
-          ${{ if eq(pair.value, 'CmdLine@2') }}: 
-            # Step is rejected by raising a YAML syntax error: Unexpected value 'CmdLine@2'
-            '${{ pair.value }}': error         
-
-    - script: echo This happens after code
-      displayName: 'Base: Signing'
